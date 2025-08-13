@@ -1,1 +1,55 @@
-"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" index.html
+<!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>
+<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>
+<head>
+    <meta charset="UTF-8">
+    <title>Free Background Remover</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        img { max-width: 90%; margin-top: 20px; }
+        button { padding: 10px 20px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Remove Background from Image</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <button onclick="removeBackground()">Remove Background</button>
+    <div>
+        <img id="resultImage" />
+    </div>
+
+<script>
+const HF_TOKEN = "YOUR_HF_TOKEN"; // Put your Hugging Face token here
+const MODEL_URL = "https://api-inference.huggingface.co/models/briaai/RMBG-1.4";
+
+async function removeBackground() {
+    const fileInput = document.getElementById('imageInput');
+    if (!fileInput.files.length) {
+        alert("Please select an image.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const formData = await file.arrayBuffer();
+
+    document.getElementById('resultImage').src = "";
+
+    const response = await fetch(MODEL_URL, {
+        method: "POST",
+        headers: {
+            "Authorization": Bearer ${HF_TOKEN},
+            "Content-Type": "application/octet-stream"
+        },
+        body: formData
+    });
+
+    if (!response.ok) {
+        alert("Error removing background.");
+        return;
+    }
+
+    const blob = await response.blob();
+    document.getElementById('resultImage').src = URL.createObjectURL(blob);
+}
+</script>
+</body>
+</html>
